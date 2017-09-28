@@ -1,5 +1,9 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+
+.idea/*
+semantic/*
+public/*
 # dependencies
 /node_modules
 
