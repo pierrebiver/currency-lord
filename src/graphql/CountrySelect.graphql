@@ -1,0 +1,13 @@
+query countrySelect {
+    country(iso2Code: String){
+        name
+        alpha2Code
+        currencies {
+            code
+            name
+            symbol
+        }
+        capital
+        population
+    }
+}

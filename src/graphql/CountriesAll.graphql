@@ -1,13 +1,6 @@
 query allCountries {
     countries {
-        name
-        alpha2Code
-        currencies {
-            code
-            name
-            symbol
-        }
-        capital
-        population
+        text: name
+        value: alpha2Code
     }
 }

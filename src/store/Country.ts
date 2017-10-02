@@ -1,16 +1,16 @@
 import {types,} from 'mobx-state-tree';
 import client from 'graphql/config';
 
-const COUNTRIES_ALL = require('graphql/CountriesAll.graphql');
+const COUNTRY_SELECT = require('graphql/CountrySelect.graphql');
 import {ApolloQueryResult} from 'apollo-client';
 import {IObservableArray} from 'mobx';
 
 
 const Currency = types.model('Currency',
     {
-        code: types.string,
-        name: types.string,
-        symbol: types.string
+        code: types.maybe(types.string),
+        name: types.maybe(types.string),
+        symbol: types.maybe(types.string)
     });
 
 const Country = types.model(
@@ -20,39 +20,30 @@ const Country = types.model(
         alpha2Code: types.string,
         currencies: types.optional(types.array(Currency), []),
         capital: types.string,
-        population: types.number
+        population: types.number,
+        convertedFromSEK: types.maybe(types.number)
     });
 
 export type ICountry = typeof Country.Type;
 
 export const CountriesStore = types.model({
     countries: types.optional(types.array(Country), []),
-    isLoading: types.optional(types.boolean, true),
-    search: types.maybe(types.string),
-    get filteredCountries() {
-        if (!this.search) {
-            return this.countries;
-        }
-
-        return this.countries.filter((c: ICountry) => c.name.toLowerCase().includes(this.search.toLowerCase()));
-    }
 }, {
-    afterCreate() {
-        this.loadCountries();
+    loadCountry(iso2Code: string | any) {
+        this.fetchCountries(iso2Code).then((f: ICountry) => this.fetchCountrySuccess(f));
     },
-    loadCountries() {
-        this.isLoading = true;
-        this.fetchCountries().then((f: IObservableArray<ICountry>) => this.fetchCountriesSuccess(f));
-    },
-    fetchCountries(): Promise<ICountry[]> {
+    fetchCountry(iso2Code: string): Promise<ICountry> {
+        console.log("test");
         return client.query({
-            query: COUNTRIES_ALL
-        }).then((q: ApolloQueryResult<any>) => q.data.foods)
-            .catch((e) => console.error('Failed to load all countries', e));
+            query: COUNTRY_SELECT,
+            variables: {
+                iso2Code
+            }
+        }).then((q: ApolloQueryResult<any>) => q.data.country)
+            .catch((e) => console.error('Failed to load country', e));
     },
-    fetchCountriesSuccess(countries: IObservableArray<ICountry>) {
-        this.isLoading = false;
-        this.countries = countries;
+    fetchCountrySuccess(country: ICountry) {
+        this.countries.push(country);
     },
 });
 

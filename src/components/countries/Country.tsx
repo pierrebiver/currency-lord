@@ -7,7 +7,7 @@ type CountryProps = {
     country: ICountry
 }
 
-const Country = ({country}: CountryProps) => (
+export const Country = ({country}: CountryProps) => (
     <Card>
         <Card.Content>
             <Card.Header>
