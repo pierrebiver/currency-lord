@@ -30,7 +30,7 @@ export const CountriesStore = types.model({
     countries: types.optional(types.array(Country), []),
 }, {
     loadCountry(iso2Code: string | any) {
-        this.fetchCountry(iso2Code).then((f: ICountry) => this.fetchCountrySuccess(f));
+        this.fetchCountry(iso2Code.toString()).then((f: ICountry) => this.fetchCountrySuccess(f));
     },
     fetchCountry(iso2Code: string): Promise<ICountry> {
         return client.query({
@@ -39,7 +39,9 @@ export const CountriesStore = types.model({
                 iso2Code
             }
         }).then((q: ApolloQueryResult<any>) => {
-            debugger;
+            if(q.data.errors)
+                throw q.data.errors.toString();
+
             return q.data.country;
         }).catch((e) => console.error('Failed to load country', e));
     },

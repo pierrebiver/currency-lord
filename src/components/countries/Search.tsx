@@ -22,7 +22,6 @@ type SearchPropsHandlers = SearchProps & {
 
 const handlers = withHandlers({
     onAddItem: ({countriesStore}: SearchProps) => {
-        debugger;
         return (event: SyntheticEvent<any>, data: SelectProps) => countriesStore.loadCountry(data.value);
     },
     onRemoveItem: ({countriesStore}: SearchProps) => (event: SyntheticEvent<any>, data: SelectProps) => countriesStore
@@ -30,7 +29,6 @@ const handlers = withHandlers({
 
 const Search = ({data, countriesStore}: ChildProps<SearchPropsHandlers, any>) => {
     const onAddItem = (event: SyntheticEvent<any>, data: SelectProps) => {
-        debugger;
         countriesStore.loadCountry(data.value);
     };
     return <Select options={data.countries} loading={data.loading} multiple search onChange={onAddItem}/>;
@@ -38,6 +36,5 @@ const Search = ({data, countriesStore}: ChildProps<SearchPropsHandlers, any>) =>
 
 export default compose<ChildProps<SearchProps, any>, {}>(
     inject('countriesStore'),
-    handlers,
     graphql(COUNTRIES_ALL),
 )(Search);
