@@ -3,7 +3,6 @@ import client from 'graphql/config';
 
 const COUNTRY_SELECT = require('graphql/CountrySelect.graphql');
 import {ApolloQueryResult} from 'apollo-client';
-import {IObservableArray} from 'mobx';
 
 
 const Currency = types.model('Currency',
@@ -23,7 +22,8 @@ const Country = types.model(
         capital: types.string,
         population: types.number,
         convertedFromSEK: types.maybe(types.number)
-    });
+    }
+);
 
 export type ICountry = typeof Country.Type;
 
@@ -65,7 +65,10 @@ export const CountriesStore = types.model({
         if (isNaN(convertedAmount))
             return; // Do nothing, we could think of display an error message on the input.
 
-        this.countries.forEach((c: ICountry) => c.convertedFromSEK = c.currency.rateSEK * convertedAmount);
+        this.countries.forEach((c: ICountry) => {
+            //c.setAmount(c.currency.rateSEK * convertedAmount);
+        });
+        console.log(this.countries.forEach((c: ICountry) => c.convertedFromSEK));
     }
 });
 

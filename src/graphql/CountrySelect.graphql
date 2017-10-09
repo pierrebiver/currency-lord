@@ -2,10 +2,11 @@ query countrySelect($isoCode: String) {
     countryByIso(isoCode: $isoCode){
         name
         alpha2Code
-        currencies {
+        currency {
             code
             name
             symbol
+            rateSEK
         }
         capital
         population

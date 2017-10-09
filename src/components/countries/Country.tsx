@@ -11,9 +11,12 @@ export const Country = ({country}: CountryProps) => (
     <Card>
         <Card.Content>
             <Card.Header>
-                <Icon name="globe"/>,
+                <Icon name="globe"/>
                 <span> {country.name}  </span>
             </Card.Header>
+            <Card.Description>
+                { country.convertedFromSEK ? `${country.convertedFromSEK} ${country.currency.code} ` : ''}
+            </Card.Description>
             <Card.Meta>
                 {country.capital}
             </Card.Meta>
