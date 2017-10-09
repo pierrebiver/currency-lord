@@ -4,12 +4,14 @@ import createHashHistory from 'history/createHashHistory';
 import CountryList from 'components/countries/CountryList';
 import {Segment} from 'semantic-ui-react';
 import Search from 'components/countries/Search';
+import AmountConverter from 'components/currency/AmountConverter';
 
 
 const Main = () => (
     <div>
         <Segment>
             <Search/>
+            <AmountConverter/>
         </Segment>,
         <CountryList/>
     </div>
