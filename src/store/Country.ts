@@ -10,7 +10,8 @@ const Currency = types.model('Currency',
     {
         code: types.maybe(types.string),
         name: types.maybe(types.string),
-        symbol: types.maybe(types.string)
+        symbol: types.maybe(types.string),
+        rateSEK: types.number
     });
 
 const Country = types.model(
@@ -18,7 +19,7 @@ const Country = types.model(
     {
         name: types.string,
         alpha2Code: types.string,
-        currencies: types.optional(types.array(Currency), []),
+        currency: Currency,
         capital: types.string,
         population: types.number,
         convertedFromSEK: types.maybe(types.number)
@@ -28,6 +29,7 @@ export type ICountry = typeof Country.Type;
 
 export const CountriesStore = types.model({
     countries: types.optional(types.array(Country), []),
+    amountSEK: types.maybe(types.number)
 }, {
     updateCountries(isoCodes: string[] = []) {
         if (isoCodes.length > this.countries.length) {
@@ -58,6 +60,13 @@ export const CountriesStore = types.model({
     fetchCountrySuccess(country: ICountry) {
         this.countries.push(country);
     },
+    calculateAmount(amount: string) {
+        const convertedAmount = parseFloat(amount);
+        if (isNaN(convertedAmount))
+            return; // Do nothing, we could think of display an error message on the input.
+
+        this.countries.forEach((c: ICountry) => c.convertedFromSEK = c.currency.rateSEK * convertedAmount);
+    }
 });
 
 export type ICountriesStore = typeof CountriesStore.Type;
