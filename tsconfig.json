@@ -16,6 +16,7 @@
     "baseUrl": "src",
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
+    "noImplicitThis": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true
   },

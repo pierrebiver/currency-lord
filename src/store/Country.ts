@@ -29,20 +29,30 @@ export type ICountry = typeof Country.Type;
 export const CountriesStore = types.model({
     countries: types.optional(types.array(Country), []),
 }, {
-    loadCountry(iso2Code: string | any) {
-        this.fetchCountry(iso2Code.toString()).then((f: ICountry) => this.fetchCountrySuccess(f));
+    updateCountries(isoCodes: string[] = []) {
+        if (isoCodes.length > this.countries.length) {
+            const isoCodeFromCountries: string[] = this.countries.map((c: ICountry) => c.alpha2Code);
+            const isoCode = isoCodes.find(i => !isoCodeFromCountries.find(ic => i === ic));
+            this.loadCountry(isoCode);
+        } else {
+            const countryToRemove = this.countries.find((c: ICountry) => !isoCodes.find(i => c.alpha2Code === i));
+            this.countries.remove(countryToRemove);
+        }
     },
-    fetchCountry(iso2Code: string): Promise<ICountry> {
+    loadCountry(isoCode: string | undefined) {
+        this.fetchCountry(isoCode).then((f: ICountry) => this.fetchCountrySuccess(f));
+    },
+    fetchCountry(isoCode: string | undefined): Promise<ICountry> {
         return client.query({
             query: COUNTRY_SELECT,
             variables: {
-                iso2Code
+                isoCode
             }
         }).then((q: ApolloQueryResult<any>) => {
-            if(q.data.errors)
+            if (q.data.errors)
                 throw q.data.errors.toString();
 
-            return q.data.country;
+            return q.data.countryByIso;
         }).catch((e) => console.error('Failed to load country', e));
     },
     fetchCountrySuccess(country: ICountry) {

@@ -1,5 +1,5 @@
-query countrySelect {
-    country(iso2Code: String){
+query countrySelect($isoCode: String) {
+    countryByIso(isoCode: $isoCode){
         name
         alpha2Code
         currencies {

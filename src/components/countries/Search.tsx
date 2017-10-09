@@ -4,7 +4,7 @@ const COUNTRIES_ALL = require('graphql/CountriesAll.graphql');
 
 import {graphql, ChildProps} from 'react-apollo';
 import {Select, SelectProps} from 'semantic-ui-react';
-import {compose, withHandlers} from 'recompose';
+import {compose} from 'recompose';
 import {inject} from 'mobx-react';
 import {ICountriesStore} from '../../store/Country';
 import {SyntheticEvent} from 'react';
@@ -20,18 +20,9 @@ type SearchPropsHandlers = SearchProps & {
     onRemoveItem: (event: SyntheticEvent<any>, data: SelectProps) => void
 }
 
-const handlers = withHandlers({
-    onAddItem: ({countriesStore}: SearchProps) => {
-        return (event: SyntheticEvent<any>, data: SelectProps) => countriesStore.loadCountry(data.value);
-    },
-    onRemoveItem: ({countriesStore}: SearchProps) => (event: SyntheticEvent<any>, data: SelectProps) => countriesStore
-});
-
 const Search = ({data, countriesStore}: ChildProps<SearchPropsHandlers, any>) => {
-    const onAddItem = (event: SyntheticEvent<any>, data: SelectProps) => {
-        countriesStore.loadCountry(data.value);
-    };
-    return <Select options={data.countries} loading={data.loading} multiple search onChange={onAddItem}/>;
+    const onChange = (event: SyntheticEvent<any>, data: SelectProps) => countriesStore.updateCountries(data.value as string[]);
+    return <Select options={data.countries} loading={data.loading} multiple search onChange={onChange}/>;
 };
 
 export default compose<ChildProps<SearchProps, any>, {}>(
