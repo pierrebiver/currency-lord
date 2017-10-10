@@ -3,7 +3,6 @@
 
 .idea/*
 semantic/*
-public/*
 # dependencies
 /node_modules
 
